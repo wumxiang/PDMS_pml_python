@@ -1,0 +1,92 @@
+
+kill !!JmoMtoReport
+setup form !!JmoMtoReport dialog resizable size 50 4
+title '海工管道Mto输出'
+text.filename'File Name'at xmin ymin width 32 is string
+button.filref'刷新文件名' at xmin+4 ymax+0.4 callback'!this.rffilename()'
+button.repcre'输出报表' at xmin+24 ymin callback'!this.createlist()'
+
+define method .JmoMtoReport()
+  !cename = !!ce.name
+  !this.filename.val = 'd:\' + !cename.replace('//', '/').substring(2) + '_PipeMto.xlsx'
+endmethod
+
+define method .createlist()
+  var !pdmswk evar pdmswk
+  !temfile = !pdmswk + '\' + !!ce.name.replace('//', '/').substring(2) + '_PipeMto.txt'
+
+  !file = object file(|$!temfile|)
+
+    var !BranMem coll all bran member for ce
+
+	!tMatCode = ARRAY()
+	!tMatDesc = ARRAY()
+	!tQty = ARRAY()
+	!tUnit = ARRAY()
+		
+	do !i index !BranMem
+		$!BranMem[$!i]
+		!Ref = Ref
+		!Type = Type
+		!Pipe = PIPE
+		!Spref = Spref
+		!MatCode = !Spref.name.Part(3,'/')
+
+        !MatDesc = Dtxr
+        !Mtxx = Mtxx
+        handle (2,232)
+        !Mtxx = ''
+        endhandle
+        if !Mtxx ne '' then
+		  !MatDesc = !MatDesc + ', ' + !Mtxx
+		  endif
+		if (!Type Eq 'TUBI')then
+        var !Qty itle
+    	!Unit = 'M'
+        else
+        	!Qty = '1'
+        	!Unit = 'EA'
+        endif
+			
+		
+		!tMatCode.Append(!MatCode)
+		!tMatDesc.Append(!MatDesc)
+		!tQty.Append(!Qty)
+		!tUnit.Append(!Unit)
+	enddo
+	
+	var !Index sort !tMatCode lastingroup !Group
+    var !TotalQty subtotal !tQty !Index !Group
+
+  !Report = ARRAY()
+  !Report[1] = '序号' + '@' + '物料编码' + '@' + '物料描述' + '@' + '数量' + '@' + '单位'
+
+  !tIndex = 1
+  do !i index !Group
+  	!Unit = !tUnit[$!Index[$!i]]
+  	if (!Unit Eq 'M')then
+        !temQty = real(!TotalQty[$!i])/ 100
+        !ftQty = string(!temQty.nint() / 10)
+  	else
+  		!ftQty = !TotalQty[$!i]
+  	endif
+  		
+  	!Record = '$!tIndex' + '@' + !tMatCode[$!Index[$!i]] + '@' + !tMatDesc[$!Index[$!i]] + '@' + !ftQty + '@' + !Unit
+  	!Report.Append(!Record)
+  	!tIndex = !tIndex + 1
+  enddo
+
+  !file.writefile('append',!Report)
+
+!python = |\\199.234.20.182\Project\JMO\JMO\python\Scripts\python.exe|
+!script = |\\199.234.20.182\Project\JMO\JMO\python\genxlsx.py|
+syscom |$!python $!script $!temfile $!this.filename.val|
+syscom |del $!temfile |
+
+endmethod
+
+define method .rffilename()
+  !cename = !!ce.name
+  !this.filename.val = 'd:\' + !cename.replace('//', '/').substring(2) + '_PipeMto.xlsx'
+
+endmethod
