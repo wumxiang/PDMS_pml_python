@@ -1,10 +1,10 @@
-
 kill !!JmoMtoReport
+--Â¿Â¿Â¿Â¿
 setup form !!JmoMtoReport dialog resizable size 50 4
-title 'º£¹¤¹ÜµÀMtoÊä³ö'
+title 'ÂºÂ£Â¹Â¤Â¹ÃœÂµÃ€MtoÃŠÃ¤Â³Ã¶'
 text.filename'File Name'at xmin ymin width 32 is string
-button.filref'Ë¢ĞÂÎÄ¼şÃû' at xmin+4 ymax+0.4 callback'!this.rffilename()'
-button.repcre'Êä³ö±¨±í' at xmin+24 ymin callback'!this.createlist()'
+button.filref'Ã‹Â¢ÃÃ‚ÃÃ„Â¼Ã¾ÃƒÃ»' at xmin+4 ymax+0.4 callback'!this.rffilename()'
+button.repcre'ÃŠÃ¤Â³Ã¶Â±Â¨Â±Ã­' at xmin+24 ymin callback'!this.createlist()'
 
 define method .JmoMtoReport()
   !cename = !!ce.name
@@ -54,12 +54,12 @@ define method .createlist()
 		!tQty.Append(!Qty)
 		!tUnit.Append(!Unit)
 	enddo
-	
+--Â¿Â¿Â¿Â¿Â¿Â¿Â¿Â¿Â¿Â¿Â¿	
 	var !Index sort !tMatCode lastingroup !Group
     var !TotalQty subtotal !tQty !Index !Group
 
   !Report = ARRAY()
-  !Report[1] = 'ĞòºÅ' + '@' + 'ÎïÁÏ±àÂë' + '@' + 'ÎïÁÏÃèÊö' + '@' + 'ÊıÁ¿' + '@' + 'µ¥Î»'
+  !Report[1] = 'ÃÃ²ÂºÃ…' + '@' + 'ÃÃ¯ÃÃÂ±Ã Ã‚Ã«' + '@' + 'ÃÃ¯ÃÃÃƒÃ¨ÃŠÃ¶' + '@' + 'ÃŠÃ½ÃÂ¿' + '@' + 'ÂµÂ¥ÃÂ»'
 
   !tIndex = 1
   do !i index !Group
@@ -77,7 +77,7 @@ define method .createlist()
   enddo
 
   !file.writefile('append',!Report)
-
+--Â¿Â¿PythonÂ¿Â¿&Â¿Â¿Â¿Â¿
 !python = |\\199.234.20.182\Project\JMO\JMO\python\Scripts\python.exe|
 !script = |\\199.234.20.182\Project\JMO\JMO\python\genxlsx.py|
 syscom |$!python $!script $!temfile $!this.filename.val|
