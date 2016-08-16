@@ -1,10 +1,10 @@
 kill !!JmoMtoReport
---¿¿¿¿
+--初始化窗体
 setup form !!JmoMtoReport dialog resizable size 50 4
-title 'º£¹¤¹ÜµÀMtoÊä³ö'
+title '海工管道Mto输出'
 text.filename'File Name'at xmin ymin width 32 is string
-button.filref'Ë¢ÐÂÎÄ¼þÃû' at xmin+4 ymax+0.4 callback'!this.rffilename()'
-button.repcre'Êä³ö±¨±í' at xmin+24 ymin callback'!this.createlist()'
+button.filref'刷新文件名' at xmin+4 ymax+0.4 callback'!this.rffilename()'
+button.repcre'输出报表' at xmin+24 ymin callback'!this.createlist()'
 
 define method .JmoMtoReport()
   !cename = !!ce.name
@@ -54,12 +54,12 @@ define method .createlist()
 		!tQty.Append(!Qty)
 		!tUnit.Append(!Unit)
 	enddo
---¿¿¿¿¿¿¿¿¿¿¿	
+--对提取的Mto数组进行分类汇总
 	var !Index sort !tMatCode lastingroup !Group
     var !TotalQty subtotal !tQty !Index !Group
 
   !Report = ARRAY()
-  !Report[1] = 'ÐòºÅ' + '@' + 'ÎïÁÏ±àÂë' + '@' + 'ÎïÁÏÃèÊö' + '@' + 'ÊýÁ¿' + '@' + 'µ¥Î»'
+  !Report[1] = '序号' + '@' + '物料编码' + '@' + '物料描述' + '@' + '数量' + '@' + '单位'
 
   !tIndex = 1
   do !i index !Group
@@ -77,7 +77,7 @@ define method .createlist()
   enddo
 
   !file.writefile('append',!Report)
---¿¿Python¿¿&¿¿¿¿
+--设置Python路径&脚本路径
 !python = |\\199.234.20.182\Project\JMO\JMO\python\Scripts\python.exe|
 !script = |\\199.234.20.182\Project\JMO\JMO\python\genxlsx.py|
 syscom |$!python $!script $!temfile $!this.filename.val|
